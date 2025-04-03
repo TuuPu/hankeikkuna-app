@@ -19,13 +19,13 @@ class HenkilotFetcher:
         # Flatten key fields
         data = []
         for item in result:
-            data.append({
-                "uuid": item.get("uuid"),
+            if isinstance(item, dict):  # 🛡️ make sure item is a dict
+                data.append({
                 "etunimi": item.get("etunimi"),
                 "sukunimi": item.get("sukunimi"),
                 "nimike": item.get("nimike"),
-                "tyonantaja": item.get("tyonantaja", {}).get("nimi", {}).get("fi"),
-                "organisaatio": item.get("organisaatio", {}).get("nimi", {}).get("fi")
+                "tyonantaja": item.get("tyonantaja"),
+                "uuid": item.get("uuid")
             })
 
         return pd.DataFrame(data)
