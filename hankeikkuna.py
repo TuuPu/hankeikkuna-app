@@ -23,12 +23,12 @@ tabs = st.tabs([
     "Teemat"
 ])
 
-# Asettajat
+
 with tabs[0]:
     fetcher = AsettajatFetcher()
     st.subheader("Asettajat")
 
-    # Filter controls
+    
     col1, col2, col3 = st.columns(3)
     with col1:
         search_type = st.selectbox("Search by", ["Name", "Abbreviation"])
@@ -46,12 +46,10 @@ with tabs[0]:
             if df.empty:
                 st.warning("No data found.")
             else:
-                # Filter by status
                 if status_filter != "All":
                     active_bool = True if status_filter == "Active" else False
                     df = df[df["aktiivinen"] == active_bool]
 
-                # Filter by search term
                 if search_input:
                     column = "nimi_" + lang if search_type == "Name" else "lyhenne_" + lang
                     if column in df.columns:
@@ -73,7 +71,7 @@ with tabs[0]:
         except Exception as e:
             st.error(f"Error fetching data: {e}")
 
-# Kohteet
+
 with tabs[1]:
     fetcher = KohteetFetcher()
     st.subheader("Kohteet (Projects)")
@@ -85,22 +83,12 @@ with tabs[1]:
             search_text = st.text_input("Teksti (free-text search)")
             selected_types = st.multiselect("Tyyppi", ["HANKE", "LAINSAADANTO"])
             selected_statuses = st.multiselect("Tila", ["SUUNNITTEILLA", "KAYNNISSA", "PAATTYNYT"])
-            #asettaja_uuid = st.text_input("Asettaja UUID")
-            #teema_uuid = st.text_input("Teema UUID")
             valmisteluvaihe = st.text_input("Valmisteluvaihe")
-            #toimenpide_uuid = st.text_input("Toimenpide UUID")
-            #hallitus_elementti_uuid = st.text_input("Hallitusohjelma Elementti UUID")
-            #hallitus_valitavoite_uuid = st.text_input("Hallitusohjelma Välitavoite UUID")
             lainsaadanto_tehtavaluokka = st.text_input("Lainsäädäntötehtäväluokka")
             toimielin_tyyppi = st.text_input("Toimielin Tyyppi")
 
         with col2:
             tunnus = st.text_input("Tunnus")
-            #asiasanat = st.text_input("Asiasanat (comma-separated)")
-            #ylatason_kohde_uuid = st.text_input("Ylätason Kohde UUID")
-            #strategia_tyyppi = st.text_input("Strategia Tyyppi")
-            #he_istuntokausi_uuid = st.text_input("HE Istuntokausi UUID")
-            #etappi_tyyppi = st.text_input("Etappi Tyyppi")
             asettamis_alku = st.date_input("Asettamispäivä Alku", value=None)
             asettamis_loppu = st.date_input("Asettamispäivä Loppu", value=None)
             muokattu_alku = st.date_input("Muokattu Päivä Alku", value=None)
@@ -121,33 +109,12 @@ with tabs[1]:
 
             if tunnus:
                 payload["tunnus"] = [tunnus]
-            #if asettaja_uuid:
-            #    payload["asettajaUuid"] = [asettaja_uuid]
-            #if teema_uuid:
-            #    payload["teemaUuid"] = [teema_uuid]
             if valmisteluvaihe:
                 payload["valmisteluvaihe"] = [valmisteluvaihe]
-            #if toimenpide_uuid:
-            #    payload["toimenpideUuid"] = [toimenpide_uuid]
-            #if hallitus_elementti_uuid:
-            #    payload["hallitusohjelmaElementtiUuid"] = [hallitus_elementti_uuid]
-            #if hallitus_valitavoite_uuid:
-            #    payload["hallitusohjelmaValitavoiteUuid"] = [hallitus_valitavoite_uuid]
             if lainsaadanto_tehtavaluokka:
                 payload["lainsaadantoTehtavaluokka"] = [lainsaadanto_tehtavaluokka]
             if toimielin_tyyppi:
-                payload["toimielinTyyppi"] = [toimielin_tyyppi]
-            #if strategia_tyyppi:
-            #    payload["strategiaTyyppi"] = [strategia_tyyppi]
-            #if he_istuntokausi_uuid:
-            #    payload["heIstuntokausiUuid"] = [he_istuntokausi_uuid]
-            #if ylatason_kohde_uuid:
-            #    payload["ylatasonKohdeUuid"] = [ylatason_kohde_uuid]
-            #if etappi_tyyppi:
-            #    payload["etappiTyyppi"] = [etappi_tyyppi]
-            #if asiasanat:
-            #    payload["asiasanat"] = [s.strip() for s in asiasanat.split(",")]
-
+                payload["toimielinTyyppi"] = [toimielin_tyyppi
             if asettamis_alku:
                 payload["asettamisPaivaAlku"] = asettamis_alku.strftime("%Y-%m-%d")
             if asettamis_loppu:
@@ -188,7 +155,6 @@ with tabs[2]:
     fetcher = HenkilotFetcher()
     st.subheader("Henkilöt (People Search)")
 
-    # --- Filters ---
     col1, col2 = st.columns(2)
     with col1:
         first_name = st.text_input("First name (etunimi)")
@@ -201,12 +167,9 @@ with tabs[2]:
 
     if st.button("Search Henkilöt"):
         try:
-            # Build payload
             payload = {
                 "size": size
             }
-
-            # Add filters only if they have values
             if first_name:
                 payload["etunimi"] = [first_name]
             if last_name:
